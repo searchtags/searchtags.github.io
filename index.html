@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Open Search Tags</title>
+  <meta name="description" content="Search tags are shortcuts that quickly take you to search results on other sites like !g for Google or !eco for Ecosia. Inspired by DuckDuckGo's bangs (!ddg)">
+  <meta name="keywords" content="shortcut, bang, duckduckgo, ecosia, search tags, search commands, duckduckgo-bangs">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#3465A4">
+  <link rel="icon" type="image/png" href="img/logo_32.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="img/logo_512.png">
+  <link rel="search" type="application/opensearchdescription+xml" title="Open Search Tags" href="search.xml">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/page.css" rel="stylesheet">
+</head>
+<body class="text-center">
+  <form class="form-search" method="get" action="">
+    <img class="mb-4" src="img/logo_onpage.svg" alt="Open Search Tags Logo" title="Open Search Tags" width="72" height="72">
+
+    <div class="input-group mb-3">
+      <input name="q" type="search" class="form-control" placeholder="Search query…" aria-label="Search query" aria-describedby="search-button" id="search-query" autocomplete="off">
+      <div class="input-group-append">
+        <button class="btn btn-primary" type="submit" id="search-button">Search</button>
+      </div>
+    </div>
+
+    <footer class="mt-5 mb-3">
+      <button type="button" class="btn btn-link" id="searchEngine" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Default Search Engine</button>
+      <div class="dropdown-menu" aria-labelledby="searchEngine">
+        <a class="dropdown-item" href="#" onclick="selectSearchEngine('eco'); return false;">Ecosia (!eco)</a>
+        <a class="dropdown-item" href="#" onclick="selectSearchEngine('ddg'); return false;">DuckDuckGo (!ddg)</a>
+        <a class="dropdown-item" href="#" onclick="selectSearchEngine('g'); return false;">Google (!g)</a>
+      </div>
+      <a href="https://github.com/searchtags" class="btn btn-link" target="_blank">More on GitHub</a>
+    </footer>
+  </form>
+
+  <script>
+    // Request parameters will be parsed by client-side JavaScript, because of limitations of GitHub pages */
+    const urlParams = new URLSearchParams(window.location.search);
+    let searchQuery = urlParams.get('q');
+
+    // Setting default value for search field
+    document.getElementById('search-query').value = searchQuery;
+    document.getElementById('search-query').focus();
+
+    // Refresh DOM
+    const updateSearchEngines = function() {
+      const searchEngineElement = document.getElementById('searchEngine');
+      switch (localStorage.getItem('defaultSearch')) {
+        case 'eco': searchEngineElement.innerHTML = 'Default Search Engine: Ecosia'; break;
+        case 'ddg': searchEngineElement.innerHTML = 'Default Search Engine: DuckDuckGo'; break;
+        case 'g': searchEngineElement.innerHTML = 'Default Search Engine: Google'; break;
+        default: searchEngineElement.innerHTML = 'Default Search Engine';
+      }
+    };
+
+    // Changes default search engine and 
+    const selectSearchEngine = function(engine) {
+      localStorage.setItem('defaultSearch', engine);
+      updateSearchEngines();
+    }
+
+    // Initializing the local storage on first page request
+    if (!localStorage.getItem('defaultSearch')) {
+      localStorage.setItem('defaultSearch', 'eco');
+    }
+
+    let searchEngine = localStorage.getItem('defaultSearch');
+    const defaultSearchEngine = localStorage.getItem('defaultSearch');
+
+    updateSearchEngines();
+
+    // Parsing the search query, if given
+    if (searchQuery) {
+      const regex = /[\!\#]([0-9a-zA-Z]+)/;
+      const matches = searchQuery.match(regex);
+
+      if (matches && matches[1]) {
+        searchEngine = matches[1].toLowerCase();
+        searchQuery = searchQuery.replace(matches[0], '').trim();
+      }
+
+      // This is just a prototype with only 3 supported search tags (Ecosia, DuckDuckGo and Google)!
+      switch (searchEngine) {
+        case 'eco': window.location.href = 'https://www.ecosia.org/search?q=' + searchQuery; break;
+        case 'ddg': window.location.href = 'https://www.duckduckgo.com/?q=' + searchQuery; break;
+        case 'g': window.location.href = 'https://www.google.com/search?q=' + searchQuery; break;
+        default: alert('Sorry, but search tag ("' + searchEngine + '") is not supported yet.');
+      }
+    }
+  </script>
+
+  <!-- Just for Bootstrap's dropdown menu. Maybe this is a little bit too much! -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>

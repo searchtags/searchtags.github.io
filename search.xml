@@ -1,0 +1,10 @@
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">
+  <ShortName>Open Search Tags</ShortName>
+  <Description>Shortcut to many search engines using "Search Tags"!</Description>
+  <InputEncoding>UTF-8</InputEncoding>
+  <Image width="64" height="64" type="image/png">https://searchtags.github.io/img/logo_64.png</Image>
+  <Url type="text/html" template="https://searchtags.github.io/">
+    <Param name="q" value="{searchTerms}"/>
+  </Url>
+  <moz:SearchForm>https://searchtags.github.io/</moz:SearchForm>
+</OpenSearchDescription>
