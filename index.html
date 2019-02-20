@@ -35,10 +35,12 @@
     </footer>
   </form>
 
+  <script src="https://cdn.jsdelivr.net/npm/searchtags-resolver/dist/searchTagResolver.js"></script>
   <script>
     // Request parameters will be parsed by client-side JavaScript, because of limitations of GitHub pages */
     const urlParams = new URLSearchParams(window.location.search);
-    let searchQuery = urlParams.get('q');
+    const originalSearchQuery = urlParams.get('q');
+    let searchQuery = originalSearchQuery;
 
     // Setting default value for search field
     document.getElementById('search-query').value = searchQuery;
@@ -81,13 +83,13 @@
         searchQuery = searchQuery.replace(matches[0], '').trim();
       }
 
-      // This is just a prototype with only 3 supported search tags (Ecosia, DuckDuckGo and Google)!
-      switch (searchEngine) {
-        case 'eco': window.location.href = 'https://www.ecosia.org/search?q=' + searchQuery; break;
-        case 'ddg': window.location.href = 'https://www.duckduckgo.com/?q=' + searchQuery; break;
-        case 'g': window.location.href = 'https://www.google.com/search?q=' + searchQuery; break;
-        default: alert('Sorry, but search tag ("' + searchEngine + '") is not supported yet.');
+      let url = searchTagsResolver.resolve(searchEngine, searchQuery);
+
+      if (!url) {
+        url = searchTagsResolver.resolve(defaultSearchEngine, originalSearchQuery);
       }
+
+      window.location = url;
     }
   </script>
 
